@@ -1,3 +1,4 @@
+require('dotenv').config();
 const bodyParser = require("body-parser");
 const express = require("express");
 const mongoose = require('mongoose');
@@ -13,7 +14,7 @@ app.set("port", process.env.PORT || 5000);
 // const api = require("./routes/api");
 // const users = require('./routes/api/users');
 
-mongoose.connect('mongodb+srv://Frank:fugh0joor2triy!GEWN@cluster0.jtj0j.mongodb.net/passport-template?retryWrites=true&w=majority', {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
