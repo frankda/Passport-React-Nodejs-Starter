@@ -1,13 +1,15 @@
-require('dotenv').config();
-const bodyParser = require("body-parser");
-const express = require("express");
-const mongoose = require('mongoose');
-const path = require("path");
-const passport = require("passport");
-//const { mongoURI } = require("./config/keys");
+import express from "express";
+import dotenv from "dotenv";
+import passport from "passport";
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
+import path from "path";
 
 const app = express();
 
+dotenv.config();
+
+// require('dotenv').config();
 app.set("environment", process.env.NODE_ENV || "production");
 app.set("port", process.env.PORT || 5000);
 
