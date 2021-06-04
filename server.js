@@ -5,17 +5,20 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import path from "path";
 
+// Controllers (route handlers)
+import * as userController from "./controllers/user.js";
+
+// Create Express server
 const app = express();
 
+// Read secret from .env
 dotenv.config();
 
-// require('dotenv').config();
+// Setup environment
 app.set("environment", process.env.NODE_ENV || "production");
 app.set("port", process.env.PORT || 5000);
 
-// const api = require("./routes/api");
-// const users = require('./routes/api/users');
-
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -26,15 +29,19 @@ mongoose.connect(process.env.MONGO_URL, {
     // process.exit();
 });
 
+// Express configuration
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-//require("./config/passport")(passport);
+/**
+ * Primary app routes.
+ */
+app.post("/signup", userController.postSignup);
 
-// app.use("/api", api);
-// app.use('/api/users', users);
-
+/**
+ * Return React to client
+ */
 if (app.get("environment") === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
   app.get("/*", function (req, res) {
@@ -42,6 +49,9 @@ if (app.get("environment") === "production") {
   });
 }
 
+/**
+ * Start Express server.
+ */
 app.listen(app.get("port"), () => {
     console.log(
         "  App is running at http://localhost:%d in %s mode",
