@@ -1,9 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import passport from "passport";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import path from "path";
+import "./utils/secrets.js";
 
 // Controllers (route handlers)
 import * as userController from "./controllers/user.js";
@@ -12,7 +14,7 @@ import * as userController from "./controllers/user.js";
 const app = express();
 
 // Read secret from .env
-dotenv.config();
+// dotenv.config();
 
 // Setup environment
 app.set("environment", process.env.NODE_ENV || "production");
@@ -30,6 +32,7 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 // Express configuration
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
@@ -37,7 +40,8 @@ app.use(passport.initialize());
 /**
  * Primary app routes.
  */
-app.post("/signup", userController.postSignup);
+app.post("/api/signup", userController.postSignup);
+app.post("/api/login", userController.postLogin);
 
 /**
  * Return React to client

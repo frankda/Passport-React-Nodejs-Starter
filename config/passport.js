@@ -1,9 +1,33 @@
-import { ExtractJwt, JwtStrategy } from "passport-jwt";
-// const User = mongoose.model("users");
+import passport from "passport";
+import passportLocal from "passport-local";
+import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 
+import { User } from "../models/User.js";
 
-import { User } from "../models/User";
+const LocalStrategy = passportLocal.Strategy;
 
+/**
+ * Sign in using Email and Password.
+ */
+passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
+  User.findOne({ email: email.toLowerCase()}, (err, user) => {
+    if (err) { return done(err); }
+    if (!user) {
+      return done(undefined, false, { message: `Email ${email} not found.` });
+    }
+    user.comparePassword(password, (err, isMatch) => {
+      if (err) { return done(err); }
+      if (isMatch) {
+        return done(undefined, user);
+      }
+      return done(undefined, false, { message: "Invalid email or password." });
+    });
+  });
+}));
+
+/**
+ * Sign in with JWT.
+ */
 const opts = {};
 
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
@@ -32,5 +56,5 @@ export const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.send("Cannot login");
+ return res.send("Cannot login");
 }
