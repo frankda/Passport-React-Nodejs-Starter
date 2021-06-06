@@ -1,5 +1,6 @@
-import { check, validationResult } from "express-validator";
 import passport from "passport";
+import jwt from "jsonwebtoken";
+import { check, validationResult } from "express-validator";
 import { User } from "../models/User.js";
 import "../config/passport.js";
 
@@ -22,7 +23,15 @@ export const postLogin = async (req, res, next) => {
         if (!user) {
             return res.status(400).send({ msg: info.message });
         }
-        return res.status(200).json(user);
+        jwt.sign({ email: user.email }, process.env.SECRET, {
+            expiresIn: 60 * 60,
+        }, (err, token) => {
+            res.status(200).json({
+                auth: true,
+                token,
+                msg: "User found & logged in"
+            });
+        }); 
     })(req, res, next);
 }
 
@@ -59,5 +68,17 @@ export const postSignup = async (req, res, next) => {
             if (err) { return next(err); }
             res.json(user);
         })
+    })
+}
+
+/**
+ * Find logged in user.
+ * @route POST /api/findUser
+ */
+
+export const findUser = (req, res, next) => {
+    console.log('function called');
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+        res.send('ok')
     })
 }

@@ -13,9 +13,6 @@ import * as userController from "./controllers/user.js";
 // Create Express server
 const app = express();
 
-// Read secret from .env
-// dotenv.config();
-
 // Setup environment
 app.set("environment", process.env.NODE_ENV || "production");
 app.set("port", process.env.PORT || 5000);
@@ -42,6 +39,7 @@ app.use(passport.initialize());
  */
 app.post("/api/signup", userController.postSignup);
 app.post("/api/login", userController.postLogin);
+app.get("/api/findUser", userController.findUser);
 
 /**
  * Return React to client
