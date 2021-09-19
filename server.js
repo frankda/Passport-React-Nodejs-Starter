@@ -39,7 +39,7 @@ app.use(passport.initialize());
  */
 app.post("/api/signup", userController.postSignup);
 app.post("/api/login", userController.postLogin);
-app.get("/api/findUser", userController.findUser);
+app.post("/api/findUser", userController.findUser);
 
 /**
  * Return React to client

@@ -79,12 +79,16 @@ export const postSignup = async (req, res, next) => {
 
 /**
  * Find logged in user.
- * @route POST /api/findUser
+ * @route post /api/findUser
+ * request header: 
+ * Authorization: Bearer <token>
  */
 
 export const findUser = (req, res, next) => {
-    console.log('function called');
-    passport.authenticate('jwt', { session: false }, (err, user, info) => {
-        res.send('ok')
-    })
+    passport.authenticate('jwt', { session: false }, (err, user) => {
+        if (!user) {
+            return res.status(401).send({ msg: "invalid token" });
+        }
+        res.send(user);
+    })(req, res, next)
 }
