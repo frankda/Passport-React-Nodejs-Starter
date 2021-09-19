@@ -7,6 +7,8 @@ import "../config/passport.js";
 /**
  * Sign in using email and password.
  * @route POST /api/login
+ * @req.body {string} email 
+ * @req.body {string} password 
  */
 export const postLogin = async (req, res, next) => {
     await check("email", "Email is not valid").isEmail().run(req);
@@ -38,6 +40,10 @@ export const postLogin = async (req, res, next) => {
 /**
  * Create a new local account.
  * @route POST /api/signup
+ * @req.body {string} name
+ * @req.body {string} email 
+ * @req.body {string} password 
+ * @req.body {string} confirmPassword 
  */
 
 export const postSignup = async (req, res, next) => {
