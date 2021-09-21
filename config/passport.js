@@ -33,8 +33,8 @@ const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.SECRET;
 
-passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-  User.findOne({id: jwt_payload.sub}, function(err, user) {
+passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+  User.findOne({id: jwt_payload.sub}, (err, user) => {
       if (err) {
           return done(err, false);
       }
